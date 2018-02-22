@@ -29,12 +29,12 @@ def run_experiment(hparams):
                                       max_steps=hparams.train_steps
                                       )
 
-  exporter = tf.estimator.FinalExporter('census',
+  exporter = tf.estimator.FinalExporter('RH',
           model.SERVING_FUNCTIONS[hparams.export_format])
   eval_spec = tf.estimator.EvalSpec(eval_input,
                                     steps=hparams.eval_steps,
                                     exporters=[exporter],
-                                    name='census-eval'
+                                    name='RH-eval'
                                     )
 
   run_config = tf.estimator.RunConfig()
@@ -85,37 +85,11 @@ if __name__ == '__main__':
       nargs='+',
       required=True
   )
-  # Training arguments
-  parser.add_argument(
-      '--embedding-size',
-      help='Number of embedding dimensions for categorical columns',
-      default=8,
-      type=int
-  )
-  parser.add_argument(
-      '--first-layer-size',
-      help='Number of nodes in the first layer of the DNN',
-      default=100,
-      type=int
-  )
-  parser.add_argument(
-      '--num-layers',
-      help='Number of layers in the DNN',
-      default=4,
-      type=int
-  )
-  parser.add_argument(
-      '--scale-factor',
-      help='How quickly should the size of the layers in the DNN decay',
-      default=0.7,
-      type=float
-  )
   parser.add_argument(
       '--job-dir',
       help='GCS location to write checkpoints and export models',
       required=True
   )
-
   # Argument to turn on all logging
   parser.add_argument(
       '--verbosity',
