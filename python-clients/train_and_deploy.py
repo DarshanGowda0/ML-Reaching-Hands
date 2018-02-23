@@ -14,6 +14,7 @@ project_id = 'projects/{}'.format(project_name)
 train_files = 'gs://reaching-hands-9fac2-mlengine/training_data/almond/train_data.csv'
 eval_files = 'gs://reaching-hands-9fac2-mlengine/training_data/almond/test_data.csv'
 
+output_dir = 'gs://reaching-hands-9fac2-mlengine/output/'
 
 def create_training_job():
 
@@ -27,7 +28,7 @@ def create_training_job():
         'pythonModule': 'trainer.task',
         'args': ['--train-files',train_files,'--eval-files',eval_files,'--train-steps','30000','--eval-steps','1000'],
         'region': 'us-central1',
-        'jobDir': 'gs://reaching-hands-9fac2-mlengine/output/'+str(my_job_name),
+        'jobDir': output_dir + str(my_job_name),
         'runtimeVersion': '1.4'}
 
     job_spec = {'jobId': my_job_name, 'trainingInput': training_inputs}
@@ -45,7 +46,7 @@ def create_training_job():
         logging.error(err._get_reason())
         return None
 
-def check_status(jobName):
+def check_train_status(jobName):
     jobId = '{}/jobs/{}'.format(project_id, jobName)
     request = ml.projects().jobs().get(name=jobId)
     print('checking status for '+str(jobId))
@@ -65,7 +66,63 @@ def check_status(jobName):
 
     return response
 
+def create_model(projectId, modelName):
+    requestDict = {'name': modelName,
+    'description': 'Another model for reaching hands '+str(modelName)}
+
+    request = ml.projects().models().create(parent=projectId,
+                            body=requestDict)
+
+    try:
+        response = request.execute()
+        print response
+
+    except errors.HttpError as err:
+        print('There was an error creating the model.' +
+            ' Check the details:')
+        print(err._get_reason())
+        response = None
+
+def deploy_model(projectId, modelName):
+    modelID = '{}/models/{}'.format(projectId, modelName)
+    requestDict = {'name': 'v1',
+    'description': 'just another deploy for reaching hands',
+    'deploymentUri': output_dir + str(modelName)+'/export/census/*/saved_model.*'}
+
+    request = ml.projects().models().versions().create(parent=modelID,
+                body=requestDict)
+
+    try:
+        response = request.execute()
+        operationID = response['name']
+
+        done = False
+        request = ml.projects().operations().get(name=operationID)
+
+        while not done:
+            response = None
+            time.sleep(5)
+            try:
+                response = request.execute()
+                print response
+                done = response.get('done', False)
+            except errors.HttpError as err:
+                print('There was an error getting the operation.' +
+                    'Check the details:')
+                print(err._get_reason())
+                done = True
+
+    except errors.HttpError as err:
+                print('There was an error getting the operation.' +
+                    'Check the details:')
+                print(err._get_reason())
+                done = True
+
 if __name__ == '__main__':
     job_name = create_training_job()
-    response = check_status(job_name)
-    print('completed '+str(response))
+    if job_name != None:
+        response = check_train_status(job_name)
+        print('completed '+str(response))
+        create_model(project_id,job_name)
+        deploy_model(project_id,job_name)
+    # deploy_model(project_id,'my_model_2018_/02_23_14_16_03')

@@ -85,3 +85,19 @@ except errors.HttpError as err:
 
     # Handle the exception as makes sense for your application.
 
+
+
+
+
+
+
+
+
+
+
+
+# projects/reaching-hands-9fac2/jobs/my_model_2018_02_23_14_16_03
+
+# starting training for my_model_2018_02_23_14_16_03
+# training submitted succesfully for {u'trainingOutput': {}, u'state': u'QUEUED', u'trainingInput': {u'runtimeVersion': u'1.4', u'region': u'us-central1', u'args': [u'--train-files', u'gs://reaching-hands-9fac2-mlengine/training_data/almond/train_data.csv', u'--eval-files', u'gs://reaching-hands-9fac2-mlengine/training_data/almond/test_data.csv', u'--train-steps', u'30000', u'--eval-steps', u'1000'], u'pythonModule': u'trainer.task', u'jobDir': u'gs://reaching-hands-9fac2-mlengine/output/my_model_2018_02_23_14_16_03', u'packageUris': [u'gs://reaching-hands-9fac2-mlengine/packages/package.tar.gz']}, u'createTime': u'2018-02-23T08:45:50Z', u'jobId': u'my_model_2018_02_23_14_16_03'}
+# checking status for projects/reaching-hands-9fac2/jobs/my_model_2018_02_23_14_16_03
