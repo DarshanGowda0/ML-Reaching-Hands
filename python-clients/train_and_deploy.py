@@ -7,14 +7,14 @@ import time
 credentials = GoogleCredentials.get_application_default()
 ml = discovery.build('ml','v1', credentials=credentials)
 
-project_name = 'reaching-hands-9fac2'
+project_name = 'reaching-hands-e2737'
 project_id = 'projects/{}'.format(project_name)
 
 
-train_files = 'gs://reaching-hands-9fac2-mlengine/training_data/almond/train_data.csv'
-eval_files = 'gs://reaching-hands-9fac2-mlengine/training_data/almond/test_data.csv'
+train_files = 'gs://reaching-hands-e2737-mlengine/training_data/almond/train_data.csv'
+eval_files = 'gs://reaching-hands-e2737-mlengine/training_data/almond/test_data.csv'
 
-output_dir = 'gs://reaching-hands-9fac2-mlengine/output/'
+output_dir = 'gs://reaching-hands-e2737-mlengine/output/'
 
 def create_training_job():
 
@@ -24,7 +24,7 @@ def create_training_job():
     print('starting training for '+str(my_job_name))
 
     training_inputs = {'scaleTier': 'BASIC',
-        'packageUris': ['gs://reaching-hands-9fac2-mlengine/packages/package.tar.gz'],
+        'packageUris': ['gs://reaching-hands-e2737-mlengine/packages/package.tar.gz'],
         'pythonModule': 'trainer.task',
         'args': ['--train-files',train_files,'--eval-files',eval_files,'--train-steps','30000','--eval-steps','1000'],
         'region': 'us-central1',
