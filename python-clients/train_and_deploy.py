@@ -11,8 +11,8 @@ project_name = 'reaching-hands-e2737'
 project_id = 'projects/{}'.format(project_name)
 
 
-train_files = 'gs://reaching-hands-e2737-mlengine/training_data/almond/train_data.csv'
-eval_files = 'gs://reaching-hands-e2737-mlengine/training_data/almond/test_data.csv'
+train_files = 'gs://reaching-hands-e2737-mlengine/training_data/Inventory.csv'
+eval_files = 'gs://reaching-hands-e2737-mlengine/training_data/Inventory.csv'
 
 output_dir = 'gs://reaching-hands-e2737-mlengine/output/'
 
@@ -124,5 +124,5 @@ if __name__ == '__main__':
         response = check_train_status(job_name)
         print('completed '+str(response))
         create_model(project_id,job_name)
-        deploy_model(project_id,job_name)
+        # deploy_model(project_id,job_name)
     # deploy_model(project_id,'my_model_2018_/02_23_14_16_03')
